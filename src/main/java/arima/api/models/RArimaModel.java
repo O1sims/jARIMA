@@ -8,7 +8,7 @@ public class RArimaModel {
 		return tsdata;
 	}
 
-	public void setTSData(Integer year) {
+	public void setTSData(Integer[] tsdata) {
 		this.tsdata = tsdata;
 	}
 }
