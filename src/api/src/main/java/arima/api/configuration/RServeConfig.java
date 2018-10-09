@@ -2,9 +2,12 @@ package arima.api.configuration;
 
 import javax.validation.constraints.NotNull;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class RServeConfig {
 
-    @NotNull private String hostname = "rserve";
+    @NotNull private String hostname = "localhost";
 
     @NotNull private String codePath = "/opt/arima";
 
