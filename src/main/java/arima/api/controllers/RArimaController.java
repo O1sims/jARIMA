@@ -14,14 +14,15 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/rarima")
+@RequestMapping("/r-arima")
 public class RArimaController {
 
   @RequestMapping(
 		  value = "/",
 		  method = RequestMethod.POST)
-  public void calculateRArima() {
-    // Go do something here...
+  public void calculateRArima(@Valid
+		  @RequestBody List<RArimaModel> rArima) {
+	  // Go do something here...
 
 
   }
