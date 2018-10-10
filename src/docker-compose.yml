@@ -1,0 +1,28 @@
+version: '2'
+services:
+  arima:
+    restart: unless-stopped
+    image: arima:latest
+    container_name: arima
+    command: java -jar /arima/api-0.0.1-SNAPSHOT.jar
+    ports:
+      - "9000:9000"
+    depends_on:
+      - rserve
+    environment:
+      - ARIMA_PORT=9000
+
+  rserve:
+    restart: unless-stopped
+    image: rserve:latest
+    env_file:
+      - "./rserve/r.env"
+    environment:
+      - R_OUTPUT=classifierOutput
+    ports:
+      - "6311:6311"
+    volumes:
+      - "./rserve/bin:/opt/arima/bin"
+      - "./rserve/R:/opt/arima/R"
+      - "./logs:/var/lib/arima/logs"
+    command: ["/opt/arima/bin/run.sh"]
