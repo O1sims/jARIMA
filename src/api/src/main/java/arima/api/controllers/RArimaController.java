@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
-import java.util.List;
 
 
 @RestController
@@ -19,7 +18,7 @@ public class RArimaController {
 		  value = "/",
 		  method = RequestMethod.POST)
   public void calculateRArima(@Valid
-		  @RequestBody List<RArimaModel> rArima) {
+		  @RequestBody RArimaModel rArima) {
 	  // Go do something here...
 
 
