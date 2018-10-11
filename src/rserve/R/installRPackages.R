@@ -25,12 +25,13 @@ if (!("devtools" %in% installed.packages())) {
 
 # CRAN packges to install with versions
 packageList <- list(
+  "Rserve" = "1.7-3",
   "RSclient" = "0.7-3",
   "forecast" = "8.3")
 
 # Generate an array of packages that have not already been installed
 newPackages <- subset(
-  x = names(packageList), 
+  x = names(packageList),
   subset = !(names(packageList) %in% installed.packages()))
 
 # Install any new packages from CRAN
@@ -39,7 +40,6 @@ if (length(newPackages) > 0) {
     devtools::install_version(
       package = package,
       version = packageList[[package]],
-      repos = cranRepo
-    )
+      repos = cranRepo)
   }
 }
