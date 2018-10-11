@@ -31,7 +31,7 @@ public class RArimaService {
 	
 	public void initiateRserveWorkspace() throws RserveException {
 		LOGGER.info("Initiating RServe workspace...");
-        this.connection.eval(this.config.getInitiateRServeWorkspace());
+        this.connection.eval(this.config.getInitiateArimaWorkspaces() + "; initiateArimaWorkspace()");
     }
 	
 }
