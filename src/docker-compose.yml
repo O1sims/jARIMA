@@ -17,8 +17,6 @@ services:
     image: rserve:latest
     env_file:
       - "./rserve/r.env"
-    environment:
-      - R_OUTPUT=classifierOutput
     ports:
       - "6311:6311"
     volumes:
