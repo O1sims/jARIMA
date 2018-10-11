@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RServeConfig {
 
-    @NotNull private String hostname = "localhost";
+    @NotNull private String hostname = "rserve";
 
     @NotNull private String codePath = "/opt/arima";
 
@@ -37,7 +37,7 @@ public class RServeConfig {
         this.port = port;
     }
 
-    public String getInitiateRServeWorkspace() {
-        return "source(\"" + this.getCodePath() + "/R/initiateRServeWorkspace.R\")";
+    public String getInitiateArimaWorkspaces() {
+        return "source(\"" + this.getCodePath() + "/initlytic/R/initiateArimaWorkspaces.R\")";
     }
 }
