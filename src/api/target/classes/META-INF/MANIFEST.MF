@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Implementation-Title: api
-Implementation-Version: 0.0.1-SNAPSHOT
-Built-By: owen
-Implementation-Vendor-Id: arima
-Build-Jdk: 1.8.0_144
-Implementation-URL: https://github.com/O1sims/ARIMA
-Created-By: Maven Integration for Eclipse
-
