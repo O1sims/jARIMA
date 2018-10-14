@@ -1,11 +1,12 @@
 FROM r-base
 
-EXPOSE 6311
-VOLUME '/var/lib/arima'
+RUN apt-get update
+RUN apt-get install libcurl4-openssl-dev
 
+RUN mkdir -p /opt/arima/R
 ADD R /opt/arima/R
 RUN Rscript /opt/arima/R/installRPackages.R
 
-ADD bin /opt/arima/bin
-WORKDIR /var/lib/arima/
-CMD /opt/arima/bin/run.sh
+ADD Rserv.conf /Rserv.conf
+
+EXPOSE 6311
