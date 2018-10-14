@@ -4,7 +4,8 @@
 ### Log file ##
 *.log
 
-/target/
+### Target files ###
+src/api/target/*
 .mvn/
 !.mvn/wrapper/maven-wrapper.jar
 
