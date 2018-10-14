@@ -8,7 +8,6 @@ case $1 in
 EOF
         ;;
     up)
-        service mongod stop
         cd src
         docker-compose up
         ;;
@@ -17,8 +16,9 @@ EOF
         docker-compose $1
         ;;
     all)
-        service mongod start
-        cd src/api/
+        cd src/rserve/
+        docker build -t rserve:latest .
+        cd ../api/
         mvn package
         docker build -t arima:latest .
         ;;
