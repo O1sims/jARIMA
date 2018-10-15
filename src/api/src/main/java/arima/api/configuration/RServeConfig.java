@@ -2,16 +2,21 @@ package arima.api.configuration;
 
 import javax.validation.constraints.NotNull;
 
-import org.springframework.stereotype.Service;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
-@Service
+
+@Configuration
+@ConfigurationProperties(prefix = "rserve")
 public class RServeConfig {
+	
+	@NotNull private String hostname;
 
-    @NotNull private String hostname = "rserve";
+    @NotNull private String codePath;
 
-    @NotNull private String codePath = "/opt/arima";
-
-    @NotNull private Integer port = 6311;
+    @NotNull private Integer port;
+    
+    @NotNull private boolean production;
 
     public String getHostname() {
         return this.hostname;
@@ -36,8 +41,16 @@ public class RServeConfig {
     public void setPort(final Integer port) {
         this.port = port;
     }
+    
+    public boolean getProduction() {
+        return this.production;
+    }
+
+    public void setProduction(final boolean production) {
+        this.production = production;
+    }
 
     public String getInitiateArimaWorkspaces() {
-        return "source(\"" + this.getCodePath() + "/initlytic/R/initiateArimaWorkspaces.R\")";
+        return "source(\"" + this.getCodePath() + "/initiateArimaWorkspace.R\")";
     }
 }

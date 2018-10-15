@@ -1,14 +1,15 @@
 package arima.api.models;
 
+
 public class RArimaModel {
 	
-	private Integer[] tsdata;
+	private int[] tsdata;
 
-	public Integer[] getTSData() {
+	public int[] getTSData() {
 		return tsdata;
 	}
 
-	public void setTSData(Integer[] tsdata) {
+	public void setTSData(int[] tsdata) {
 		this.tsdata = tsdata;
 	}
 }

@@ -1,5 +1,6 @@
 package arima.api;
 
+import arima.api.configuration.RServeConfig;
 import arima.api.services.RArimaService;
 
 import org.slf4j.Logger;
@@ -23,11 +24,12 @@ public class Application {
 	
 	@Bean
     public CommandLineRunner commandLineRunner(
-    		ApplicationContext ctx, 
+    		ApplicationContext ctx,
+    		RServeConfig rServeConfig,
     		RArimaService rArimaService) {
         return args -> {
         	LOGGER.info("Setting up RServe environment...");
-            rArimaService.initiateRserveWorkspace();
+        	rArimaService.initRServeWorkspace(rServeConfig);
         };
 	};
 }
