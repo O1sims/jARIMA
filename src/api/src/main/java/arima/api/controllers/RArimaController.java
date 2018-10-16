@@ -23,7 +23,6 @@ public class RArimaController {
 	
 	@Value("${rserve.port}") @NotNull private int port;
 	@Value("${rserve.hostname}") @NotNull private String hostname;
-	@Value("${rserve.production}") @NotNull private boolean production;
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(RArimaController.class);
 	

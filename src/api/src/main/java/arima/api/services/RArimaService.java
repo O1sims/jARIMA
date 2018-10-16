@@ -18,9 +18,6 @@ public class RArimaService {
 	@Value("${rserve.port}") 
 	@NotNull private int port;
 	
-	@Value("${rserve.production}")
-	@NotNull private boolean production;
-	
 	private RConnection connection;
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(RArimaService.class);
@@ -28,27 +25,15 @@ public class RArimaService {
 	public void performArima(int[] tsData) throws Exception {
     	
 		LOGGER.info("Connecting to Rserve: {}:{}", this.hostname, this.port);
-		
-        if (this.production) {
-                try {
-                	this.connection = new RConnection(
-                			this.hostname,
-                			this.port);
-                	this.connection.assign("tsData", tsData);
-                	this.connection.voidEval("dffv <- data.frame(forecast::forecast(forecast::auto.arima(tsData), 1))");
-                	final Double hi95 = this.connection.eval("dffv$Hi.95").asDouble();
-                	final Double lo95 = this.connection.eval("dffv$Lo.95").asDouble();
-                	LOGGER.info(hi95.toString());
-                	LOGGER.info(lo95.toString());
-                } catch (Exception e) {
-                	LOGGER.error("Failed initializing Rserve connection.", e);
-                	throw e;
-                } finally {
-                	LOGGER.info("Successfully connected to Rserve and created workspace");
-                };
-        } else {
-        	LOGGER.info("This is not a production build -- not connecting to Rserve");
-        };
+		this.connection = new RConnection(
+				this.hostname,
+				this.port);
+        this.connection.assign("tsData", tsData);
+        this.connection.voidEval("dffv <- data.frame(forecast::forecast(forecast::auto.arima(tsData), 1))");
+        final Double hi95 = this.connection.eval("dffv$Hi.95").asDouble();
+        final Double lo95 = this.connection.eval("dffv$Lo.95").asDouble();
+        LOGGER.info(hi95.toString());
+        LOGGER.info(lo95.toString());
     }
-
+	
 }
