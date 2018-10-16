@@ -1,6 +1,6 @@
 package arima.api.controllers;
 
-import arima.api.models.RArimaModel;
+import arima.api.models.ArimaModel;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +30,7 @@ public class RArimaController {
 			value = "/", 
 			method = RequestMethod.POST)
 	public double[] calculateRArima(
-			@Valid @RequestBody RArimaModel rArima)
+			@Valid @RequestBody ArimaModel rArima)
 					throws Exception {
 		LOGGER.info("Connecting to Rserve: {}:{}", this.hostname, this.port);
         this.connection = new RConnection(this.hostname, this.port);
