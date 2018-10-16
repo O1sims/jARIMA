@@ -1,6 +1,6 @@
 package arima.api.models;
 
-public class RArimaModel {
+public class ArimaModel {
 	
 	private int[] tsdata;
 
