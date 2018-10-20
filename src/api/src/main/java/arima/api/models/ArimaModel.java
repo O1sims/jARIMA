@@ -2,13 +2,22 @@ package arima.api.models;
 
 public class ArimaModel {
 	
-	private int[] tsdata;
+	private double[] tsdata;
+	private int forecastPeriod;
 
-	public int[] getTSData() {
+	public double[] getTSData() {
 		return tsdata;
 	}
 
-	public void setTSData(int[] tsdata) {
+	public void setTSData(double[] tsdata) {
 		this.tsdata = tsdata;
+	}
+	
+	public int getForecastPeriod() {
+		return forecastPeriod;
+	}
+
+	public void setForecastPeriod(int forecastPeriod) {
+		this.forecastPeriod = forecastPeriod;
 	}
 }
