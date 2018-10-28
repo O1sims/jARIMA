@@ -1,6 +1,8 @@
 package arima.api.controllers;
 
 import arima.api.models.ArimaModel;
+import arima.api.analytics.timeseries.arima.Arima;
+import arima.api.analytics.timeseries.arima.struct.ForecastResult;
 
 import javax.validation.Valid;
 
@@ -17,10 +19,13 @@ public class JArimaController {
 	@RequestMapping(
 			value = "/", 
 			method = RequestMethod.POST)
-	public double[] calculateRArima(
+	public ForecastResult calculateRArima(
 			@Valid @RequestBody ArimaModel rArima)
 					throws Exception {
-		double[] out = {1, 2};
-        return out; 
+		
+		ForecastResult forecastResult = Arima.forecast_arima(
+				rArima.getTSData(), rArima.getForecastPeriod());
+		
+		return forecastResult; 
 	}
 }
