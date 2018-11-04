@@ -23,6 +23,8 @@ public class JArimaController {
 			@Valid @RequestBody ArimaModel rArima)
 					throws Exception {
 		
+		
+		
 		ForecastResult forecastResult = Arima.forecast_arima(
 				rArima.getTSData(), rArima.getForecastPeriod());
 		
