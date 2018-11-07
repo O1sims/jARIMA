@@ -1,16 +1,16 @@
 package arima.api.models;
 
-public class ArimaModel {
+public class TimeSeriesModel {
 	
-	private double[] tsdata;
+	private double[] tsData;
 	private int forecastPeriod;
 
 	public double[] getTSData() {
-		return tsdata;
+		return tsData;
 	}
 
 	public void setTSData(double[] tsdata) {
-		this.tsdata = tsdata;
+		this.tsData = tsdata;
 	}
 	
 	public int getForecastPeriod() {
