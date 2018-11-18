@@ -1,14 +1,9 @@
 package arima.api.analytics.timeseries.arima;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import arima.api.analytics.timeseries.arima.struct.ArimaModel;
-import arima.api.analytics.timeseries.arima.struct.ArimaParams;
-import arima.api.analytics.timeseries.arima.struct.ForecastResult;
 import arima.api.analytics.timeseries.timeseriesutil.ForecastUtil;
+import arima.api.models.ArimaModel;
+import arima.api.models.ArimaParameterModel;
+import arima.api.models.ForecastResultModel;
 
 /**
  * ARIMA implementation
@@ -26,27 +21,22 @@ public final class Arima {
      *        forecasted
      * @return a ForecastResult object, which contains the forecasted values and/or error message(s)
      */
-    public static ForecastResult forecast_arima(final double[] data, final int forecastSize) {
+    public static ForecastResultModel forecast_arima(final double[] data, final int forecastSize) {
 
         try {
         	// establish array to store forecast results
-        	ForecastResult currentModel = null;
+        	ForecastResultModel currentModel = null;
         	
-        	// initial models (Hyndman and Khandakar, 2008:11)
-        	// for non-seasonal data
-        	int[] params = {2, 2, 0, 0, 1, 0, 0, 1};
-        	List<Integer> list = Arrays
-        			.stream(params)
-        			.boxed()
-        			.collect(Collectors.toList());
-        	
-        	// loop over potential models
-        	for (int x = 0; x <=(params.length-2)/2; x++) {
-        		currentModel = forecast(
-        				currentModel, data, forecastSize, list.get(x*2), list.get((x*2)+1));
+        	// loop over initial models (Hyndman and Khandakar, 2008:11)
+        	// and select best model
+        	for (int p = 0; p <= 2; p++) {
+        		for (int q = 0; q <= 2; q++) {
+        			currentModel = forecast(
+        					currentModel, data, forecastSize, p, q, 1, 1);
+        		}
         	}
 
-            // successfully built ARIMA model and its forecast
+            // successfully build ARIMA model and its forecast
             return currentModel;
 
         } catch (final Exception ex) {
@@ -56,35 +46,43 @@ public final class Arima {
         
     }
     
-    private static ForecastResult forecast(ForecastResult currentModel, final double[] data, 
-    		final int forecastSize, int p, int q) {
+    private static ForecastResultModel forecast(ForecastResultModel currentModel, final double[] data, 
+    		final int forecastSize, int p, int q, int P, int Q) {
     	
     	// set the initial parameters for (p, d, q, P, D, Q, m)
-		final ArimaParams paramsForecast = new ArimaParams(
-				p, 0, q, 1, 0, 1, 1);
+		final ArimaParameterModel paramsForecast = new ArimaParameterModel(
+				p, 0, q, P, 0, Q, 1);
     	
         // estimate ARIMA model parameters for forecasting
         final ArimaModel fittedModel = ArimaSolver.estimateARIMA(
             paramsForecast, data, data.length, data.length + 1);
 
         // compute RMSE to be used in confidence interval computation
-        final double rmseValidation = ArimaSolver.computeRMSEValidation(
+        final double aicValue = ArimaSolver.computeAICValidation(
             data, ForecastUtil.testSetPercentage, paramsForecast);
         
-        if (currentModel == null || rmseValidation < currentModel.getRMSE()) {
-        	// set the RMSE
-            fittedModel.setRMSE(rmseValidation);
+        if (currentModel == null || aicValue < currentModel.getAIC()) {
+        	// set the AIC
+            fittedModel.setAIC(aicValue);
+            
+            // compute RMSE to be used in confidence interval computation
+            final double rmseValue = ArimaSolver.computeRMSEValidation(
+                data, ForecastUtil.testSetPercentage, paramsForecast);
+            
+            // set the RMSE
+            fittedModel.setRMSE(rmseValue);
             
             // run forecast model
-        	final ForecastResult forecastResult = fittedModel.forecast(forecastSize);
+        	final ForecastResultModel forecastResult = fittedModel.forecast(forecastSize);
             
             // populate confidence interval
             forecastResult.setSigma2AndPredicationInterval(fittedModel.getParams());
             
-            // add to forecast results
+            // return new forecast model
             return forecastResult;
         }
         
+        // return the existing model
         return currentModel;
     }
 }
