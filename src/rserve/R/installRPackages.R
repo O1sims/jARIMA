@@ -17,7 +17,9 @@ cranRepo <- 'http://cran.us.r-project.org'
 
 # Install devtools if not installed already
 # Required for installing versions
-packageList <- c("Rserve", "RSclient", "forecast")
+packageList <- c(
+  "Rserve", "RSclient", "forecast"
+)
 for (package in packageList) {
   if (!(package %in% installed.packages())) {
     utils::install.packages(
