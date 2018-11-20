@@ -1,7 +1,7 @@
 package arima.api.controllers;
 
 import arima.api.models.TimeSeriesModel;
-import arima.api.models.ForecastResultModel;
+import arima.api.models.RArimaResultModel;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +21,6 @@ import javax.validation.constraints.NotNull;
 public class RArimaController {
 	
 	private RConnection connection;
-	private ForecastResultModel forecastResultModel;
 	
 	@Value("${rserve.port}") @NotNull private int port;
 	@Value("${rserve.hostname}") @NotNull private String hostname;
@@ -31,7 +30,7 @@ public class RArimaController {
 	@RequestMapping(
 			value = "/",
 			method = RequestMethod.POST)
-	public ForecastResultModel calculateRArima(
+	public RArimaResultModel calculateRArima(
 			@Valid @RequestBody TimeSeriesModel rArima)
 					throws Exception {
 		LOGGER.info("Connecting to Rserve: {}:{}", this.hostname, this.port);
@@ -41,11 +40,11 @@ public class RArimaController {
         LOGGER.info("Evaluating time-series data...");
         this.connection.voidEval("dffv <- data.frame(forecast::forecast(forecast::auto.arima(tsData), forecastPeriod))");
         
-        this.forecastResultModel = new ForecastResultModel(null, port);
+        RArimaResultModel forecastResult = new RArimaResultModel(
+        		this.connection.eval("dffv$Point.Forecast").asDoubles(), 
+        		this.connection.eval("dffv$Hi.95").asDoubles(), 
+        		this.connection.eval("dffv$Lo.95").asDoubles());
         
-        this.forecastResultModel.setlowerBound(this.connection.eval("dffv$Lo.95").asDoubles());
-        this.forecastResultModel.setupperBound(this.connection.eval("dffv$Hi.95").asDoubles());
-        
-        return this.forecastResultModel;
+        return forecastResult;
 	}
 }
