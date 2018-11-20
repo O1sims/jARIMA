@@ -1,6 +1,7 @@
 package arima.api.controllers;
 
 import arima.api.models.TimeSeriesModel;
+import arima.api.models.ForecastResultModel;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import javax.validation.constraints.NotNull;
 public class RArimaController {
 	
 	private RConnection connection;
+	private ForecastResultModel forecastResultModel;
 	
 	@Value("${rserve.port}") @NotNull private int port;
 	@Value("${rserve.hostname}") @NotNull private String hostname;
@@ -27,20 +29,23 @@ public class RArimaController {
 	private final Logger LOGGER = LoggerFactory.getLogger(RArimaController.class);
 	
 	@RequestMapping(
-			value = "/", 
+			value = "/",
 			method = RequestMethod.POST)
-	public double[] calculateRArima(
+	public ForecastResultModel calculateRArima(
 			@Valid @RequestBody TimeSeriesModel rArima)
 					throws Exception {
 		LOGGER.info("Connecting to Rserve: {}:{}", this.hostname, this.port);
         this.connection = new RConnection(this.hostname, this.port);
         this.connection.assign("tsData", rArima.getTSData());
+        this.connection.assign("forecastPeriod", String.valueOf(rArima.getForecastPeriod()));
         LOGGER.info("Evaluating time-series data...");
-        this.connection.voidEval("dffv <- data.frame(forecast::forecast(forecast::auto.arima(tsData), 1))");
-        double[] out = {
-        		this.connection.eval("dffv$Hi.95").asDouble(),
-            	this.connection.eval("dffv$Lo.95").asDouble()
-        };
-        return out; 
+        this.connection.voidEval("dffv <- data.frame(forecast::forecast(forecast::auto.arima(tsData), forecastPeriod))");
+        
+        this.forecastResultModel = new ForecastResultModel(null, port);
+        
+        this.forecastResultModel.setlowerBound(this.connection.eval("dffv$Lo.95").asDoubles());
+        this.forecastResultModel.setupperBound(this.connection.eval("dffv$Hi.95").asDoubles());
+        
+        return this.forecastResultModel;
 	}
 }
