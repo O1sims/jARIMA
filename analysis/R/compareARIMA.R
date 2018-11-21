@@ -1,37 +1,95 @@
 library(httr)
-library(forecast)
 library(jsonlite)
 library(magrittr)
 
 
 
-compareARIMA <- function(dataPoints, minRange, maxRange, forecastPeriod) {
-  # Generate a list or random numbers
-  tsData <- dataPoints %>% 
-    runif(
-      min = minRange,
-      max = maxRange)
+compareARIMA <- function(dataPoints, minRange, maxRange, iterations) {
+  # Instantiate result vectors
+  jArima <- rArima <- c()
   
-  # Pipe this into the ARIMA forecast mechanism
-  arimaAnalysis <- tsData %>%
-    auto.arima() %>%
-    forecast(forecastPeriod) %>%
-    data.frame()
+  for (i in 1:iterations) {
+    # Generate a list or random numbers
+    tsData <- dataPoints %>% 
+      runif(
+        min = minRange,
+        max = maxRange)
+    
+    # Convert tsData to JSON
+    postJSON <- list(
+      forecastPeriod = 1,
+      tsdata = tsData)
+    
+    # Get forecast from JARIMA
+    JARIMAResult <- getARIMAForecast(
+      model = 'j-arima', 
+      payloadData = postJSON)
+    
+    jArima %<>% append(JARIMAResult)
+    
+    # Get forecast from RARIMA
+    RARIMAResult <- getARIMAForecast(
+      model = 'r-arima', 
+      payloadData = postJSON)
+    
+    rArima %<>% append(RARIMAResult)
+  }
   
-  # Convert tsData to JSON
-  postJSON <- list(
-    forecastPeriod = forecastPeriod,
-    tsdata = tsData)
+  # Create list of summary statistics
+  results.list <- list(
+    dataPoints = dataPoints,
+    iterations = iterations,
+    jArimaResults = jArima,
+    rARIMAResults = rArima,
+    percentageDiff = abs(((rArima - jArima)/rArima) * 100),
+    variance = var(jArima, rArima),
+    correlation = cor(jArima, rArima))
   
-  # Send JSON to JARIMA endpoint in Java app
-  requestResponse <- 'http://localhost:9000/api/j-arima/' %>%
+  # Return summary statistics
+  return(results.list)
+}
+
+
+getARIMAForecast <- function(model = c("j-arima", "r-arima"), payloadData) {
+  # Begin stopclock
+  t <- Sys.time()
+  
+  # Send JSON to ARIMA endpoint in Java app
+  RequestResponse <- 'http://localhost:9000/api/' %>%
+    paste0(model, '/') %>%
     httr::POST(
-      body = postJSON, 
+      body = payloadData, 
       encode = "json")
   
-  # Unpack JARIMA results
-  JARIMAResults <- requestResponse %>% 
+  "Time taken for " %>%
+  paste0(model, " : ", Sys.time() - t) %>%
+    print()
+  
+  # Unpack ARIMA results
+  ARIMAResults <- RequestResponse %>% 
     httr::content()
   
-  
+  # Return first forecast result
+  return(ARIMAResults$forecast[[1]])
 }
+
+
+avgPercentageDiff <- variance <- dataPoints <- c()
+for (i in seq(50, 1000, 50)) {
+  print(i)
+  analysisResults <- compareARIMA(
+    dataPoints = i, 
+    iterations = 10, 
+    minRange = 100, 
+    maxRange = 200)
+  variance %<>% 
+    append(analysisResults$variance[[1]])
+  avgPercentageDiff %<>% 
+    append(mean(analysisResults$percentageDiff))
+  dataPoints %<>% 
+    append(i)
+}
+
+plot(
+  x = dataPoints,
+  y = variance)
