@@ -4,6 +4,9 @@ public class TimeSeriesModel {
 
 	private double[] tsData;
 	private int forecastPeriod;
+	private ArimaParameterModel params;
+	private double[] data;
+	private int trainDataSize;
 
 	/**
 	 * Constructor for TimeSeriesModel
