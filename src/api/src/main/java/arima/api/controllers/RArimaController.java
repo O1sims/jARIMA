@@ -38,7 +38,8 @@ public class RArimaController {
         this.connection.assign("tsData", rArima.getTSData());
         this.connection.assign("forecastPeriod", String.valueOf(rArima.getForecastPeriod()));
         LOGGER.info("Evaluating time-series data...");
-        this.connection.voidEval("dffv <- data.frame(forecast::forecast(forecast::auto.arima(tsData), forecastPeriod))");
+        this.connection.voidEval(
+        		"dffv <- data.frame(forecast::forecast(forecast::auto.arima(tsData), forecastPeriod))");
         
         RArimaResultModel forecastResult = new RArimaResultModel(
         		this.connection.eval("dffv$Point.Forecast").asDoubles(), 
