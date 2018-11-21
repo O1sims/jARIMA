@@ -7,9 +7,9 @@ import arima.api.analytics.timeseries.arima.ArimaSolver;
  */
 public class ForecastResultModel {
 
-    private final double[] forecast;
-    private final double[] upperBound;
-    private final double[] lowerBound;
+    private double[] forecast;
+    private double[] upperBound;
+    private double[] lowerBound;
     private final double dataVariance;
     
     private double modelAIC;
@@ -124,6 +124,7 @@ public class ForecastResultModel {
     public double[] getForecast() {
         return forecast;
     }
+    
 
     /**
      * Getter for upper confidence bounds
@@ -132,6 +133,13 @@ public class ForecastResultModel {
      */
     public double[] getupperBound() {
         return upperBound;
+    }
+    
+    /**
+     * Setter for upper bound
+     */
+    public void setupperBound(double[] upperBound) {
+        this.upperBound = upperBound;
     }
 
     /**
@@ -142,4 +150,12 @@ public class ForecastResultModel {
     public double[] getlowerBound() {
         return lowerBound;
     }
+    
+    /**
+     * Setter for lower bound
+     */
+    public void setlowerBound(double[] lowerBound) {
+        this.lowerBound = lowerBound;
+    }
+    
 }
