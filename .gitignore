@@ -1,6 +1,6 @@
 ### Compiled class file ###
 *.class
- 
+
 ### Log file ##
 *.log
 
@@ -46,3 +46,12 @@ src/api/target/*
 
 ### virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml ###
 hs_err_pid*
+
+# Javascript dependencies
+node_modules/
+
+# Auto-generated JS
+src/webserver/gui/*.js
+src/webserver/gui/**/*.js
+!src/webserver/gui/assets/*.js
+!src/webserver/gui/assets/js/*.js
