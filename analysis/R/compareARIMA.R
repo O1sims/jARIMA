@@ -10,14 +10,11 @@ compareARIMA <- function(dataPoints, minRange, maxRange, iterations) {
   
   for (i in 1:iterations) {
     # Generate a list or random numbers
-    tsData <- dataPoints %>% 
-      runif(
-        min = minRange,
-        max = maxRange)
+    tsData <- as.numeric(AirPassengers)
     
     # Convert tsData to JSON
     postJSON <- list(
-      forecastPeriod = 1,
+      forecastPeriod = 10,
       tsdata = tsData)
     
     # Get forecast from JARIMA
@@ -25,7 +22,8 @@ compareARIMA <- function(dataPoints, minRange, maxRange, iterations) {
       model = 'j-arima', 
       payloadData = postJSON)
     
-    jArima %<>% append(JARIMAResult)
+    jArima %<>% 
+      append(JARIMAResult)
     
     # Get forecast from RARIMA
     RARIMAResult <- getARIMAForecast(
@@ -70,16 +68,16 @@ getARIMAForecast <- function(model = c("j-arima", "r-arima"), payloadData) {
     httr::content()
   
   # Return first forecast result
-  return(ARIMAResults$forecast[[1]])
+  return(ARIMAResults$forecast)
 }
 
 
-avgPercentageDiff <- variance <- dataPoints <- c()
+avgPercentageDiff <- variance <- correlation <- dataPoints <- c()
 for (i in seq(50, 1000, 50)) {
   print(i)
   analysisResults <- compareARIMA(
     dataPoints = i, 
-    iterations = 10, 
+    iterations = 5, 
     minRange = 100, 
     maxRange = 200)
   variance %<>% 
@@ -88,8 +86,7 @@ for (i in seq(50, 1000, 50)) {
     append(mean(analysisResults$percentageDiff))
   dataPoints %<>% 
     append(i)
+  correlation %<>%
+    append(analysisResults$correlation)
 }
 
-plot(
-  x = dataPoints,
-  y = variance)
