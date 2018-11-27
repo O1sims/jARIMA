@@ -16,6 +16,16 @@ services:
       - RSERVE_CODEPATH=/opt/arima/R
       - RSERVE_PRODUCTION=true
 
+  arima-gui:
+    restart: unless-stopped
+    image: arima-gui:latest
+    container_name: arima-gui
+    ports:
+      - "3000:3000"
+    depends_on:
+      - arima
+      - rserve
+
   rserve:
     restart: unless-stopped
     image: rserve:latest
