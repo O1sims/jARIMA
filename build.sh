@@ -16,9 +16,9 @@ EOF
         docker-compose $1
         ;;
     all)
-        cd src/rserve/
-        docker build -t rserve:latest .
-        cd ../api/
+        docker build -t pax-gui:latest src/webserver/.
+        docker build -t rserve:latest src/rserve/.
+        cd src/api/
         mvn package
         docker build -t arima:latest .
         ;;
