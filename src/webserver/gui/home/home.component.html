@@ -1,0 +1,110 @@
+<div class="container-fluid">
+  <div class="container" style="padding-top: 50px;">
+    <div class="row">
+      <div class="col-xs-6">
+
+        <h3 class="panel-heading">
+          Generate time series data
+        </h3>
+
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label class="control-label col-sm-4">
+              Forecast period
+            </label>
+            <div class="col-sm-8">
+              <input type="number" class="form-control" min=1 value=1
+                (input)="setFeature($event, 'forecastPeriod')">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-4">
+              Data length
+            </label>
+            <div class="col-sm-8">
+              <input type="number" class="form-control" min=10 value=10
+                (input)="setFeature($event, 'dataLength')">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-4">
+              Max. value
+            </label>
+            <div class="col-sm-8">
+              <input type="number" class="form-control" min=2 value=100
+                (input)="setFeature($event, 'maxValue')">
+            </div>
+          </div>
+        </form>
+
+        <button type="button" class="btn btn-success pull-right"
+          (click)="generateTimeSeriesData()">
+          Generate Random Data
+        </button>
+      </div>
+      <div class="col-xs-6">
+
+        <h3 class="panel-heading">
+          Data chart
+        </h3>
+
+        <canvas
+          id="TimeSeriesChart"
+          width="200"
+          height="200">
+        </canvas>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <h3 class="panel-heading">
+          Payload
+        </h3>
+        <pre>
+          <code>
+            {{postBodyString}}
+          </code>
+        </pre>
+      </div>
+
+      <button type="button" class="btn btn-success pull-right"
+        (click)="sendToARIMA()">
+        Send to ARIMA components
+      </button>
+
+    </div>
+    <div class="row">
+      <div class="col-xs-6">
+        <h3 class="panel-heading">
+          R ARIMA Results
+        </h3>
+        <h5>
+          Forecast results: {{rArimaResults['forecast']}}
+        </h5>
+        <h5>
+          Upper bounds: {{rArimaResults['upperBound']}}
+        </h5>
+        <h5>
+          Lower bounds: {{rArimaResults['lowerBound']}}
+        </h5>
+      </div>
+      <div class="col-xs-6">
+        <h3 class="panel-heading">
+          Java ARIMA Results
+        </h3>
+        <h5>
+          Forecast results: {{jArimaResults['forecast']}}
+        </h5>
+        <h5>
+          Upper bounds: {{jArimaResults['upperBound']}}
+        </h5>
+        <h5>
+          Lower bounds: {{jArimaResults['lowerBound']}}
+        </h5>
+      </div>
+    </div>
+  </div>
+</div>

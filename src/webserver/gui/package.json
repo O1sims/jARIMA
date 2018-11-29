@@ -1,0 +1,46 @@
+{
+  "name": "JARIMA",
+  "description": "Comparison between ARIMA in R and in Java",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/O1sims/ARIMA.git"
+  },
+  "scripts": {
+    "start": "concurrently \"npm run tsc:w\" \"npm run lite\" ",
+    "lite": "lite-server",
+    "postinstall": "typings install",
+    "tsc": "tsc",
+    "tsc:w": "tsc -w",
+    "typings": "typings"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@angular/animations": "^4.4.7",
+    "@angular/cli": "^7.1.0",
+    "@angular/common": "^4.4.7",
+    "@angular/compiler": "^4.4.7",
+    "@angular/core": "^4.4.7",
+    "@angular/forms": "^4.4.7",
+    "@angular/http": "^4.4.7",
+    "@angular/platform-browser": "^4.4.7",
+    "@angular/platform-browser-dynamic": "^4.4.7",
+    "@angular/router": "^4.4.7",
+    "@angular/upgrade": "^4.4.7",
+    "chart.js": "^2.7.3",
+    "d3": "^3.4.4",
+    "ng2-nvd3": "^2.0.0",
+    "reflect-metadata": "^0.1.12",
+    "rxjs": "^5.0.1",
+    "systemjs": "^0.21.3",
+    "underscore": "^1.8.3",
+    "zone.js": "^0.8.4"
+  },
+  "devDependencies": {
+    "@types/node": "^6.0.46",
+    "concurrently": "^2.0.0",
+    "lite-server": "^2.2.0",
+    "typescript": "^2.3.4",
+    "typings": "^1.0.4"
+  }
+}

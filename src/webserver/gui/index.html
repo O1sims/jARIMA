@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <base href="/">
+
+    <title>ARIMA</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Load stylesheets -->
+    <link rel="stylesheet" href="./assets/css/bootstrap.css" />
+    <link rel="stylesheet" href="./assets/css/bootstrap-theme.css" />
+    <link rel="stylesheet" href="./assets/css/custom.css" />
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Roboto">
+
+    <!-- Load javascript -->
+    <script src="./assets/js/jquery-3.2.1.min.js"></script>
+    <script src="./assets/js/bootstrap.js"></script>
+
+    <!-- Load node_modules packages -->
+    <script src="./node_modules/zone.js/dist/zone.js"></script>
+    <script src="./node_modules/reflect-metadata/Reflect.js"></script>
+    <script src="./node_modules/systemjs/dist/system.src.js"></script>
+    <script src="./assets/systemjs.config.js"></script>
+
+    <script src="./node_modules/chart.js/dist/Chart.js"></script>
+
+    <script>
+      System.import('app').catch(function(err) {
+        console.error(err);
+      });
+    </script>
+  </head>
+
+  <body>
+    <my-app></my-app>
+  </body>
+</html>

@@ -1,0 +1,128 @@
+body {
+  padding-top: 50px;
+  font-family: 'Roboto', sans-serif;
+}
+
+#home_search_container{
+    margin-top: 8%;
+}
+
+.stylish-input-group .input-group-addon{
+    background: white !important;
+}
+
+.stylish-input-group .form-control{
+	border-right: 0;
+	box-shadow: 0 0 0;
+	border-color: #ccc;
+}
+
+.stylish-input-group button{
+    border: 0;
+    background: transparent;
+}
+
+.btn.outline {
+	background: none;
+	padding: 12px 22px;
+}
+
+.btn-primary.outline {
+	border: 2px solid #0099cc;
+	color: #0099cc;
+}
+
+.btn-primary.outline:hover, .btn-primary.outline:focus, .btn-primary.outline:active,
+.btn-primary.outline.active, .open > .dropdown-toggle.btn-primary {
+	color: #33a6cc;
+	border-color: #33a6cc;
+}
+
+.btn-primary.outline:active, .btn-primary.outline.active {
+	border-color: #007299;
+	color: #007299;
+	box-shadow: none;
+}
+
+.btn-success.outline {
+  background-color: #5cb85c;
+	border: 2px solid #FFF;
+	color: #FFF;
+}
+
+.btn-success.outline:hover, .btn-success.outline:focus, .btn-success.outline:active,
+.btn-success.outline.active, .open > .dropdown-toggle.btn-success {
+	color: #33a6cc;
+	border-color: #33a6cc;
+}
+
+.btn-success.outline:active, .btn-success.outline.active {
+	border-color: #5cb85c;
+	color: #5cb85c;
+	box-shadow: none;
+}
+
+.glyphicon {
+    font-size: 25px;
+}
+
+.glyphicon.fast-right-spinner {
+    -webkit-animation: glyphicon-spin-r 1s infinite linear;
+    animation: glyphicon-spin-r 1s infinite linear;
+}
+
+@-webkit-keyframes glyphicon-spin-r {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+@keyframes glyphicon-spin-r {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+@-webkit-keyframes glyphicon-spin-l {
+    0% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes glyphicon-spin-l {
+    0% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+}
+
+.jumbotron-green {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  margin-bottom: 30px;
+  color: #FFF;
+  background-color: #87d3a5;
+}
