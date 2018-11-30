@@ -30,7 +30,8 @@ compareARIMA <- function(dataPoints, minRange, maxRange, iterations) {
       model = 'r-arima', 
       payloadData = postJSON)
     
-    rArima %<>% append(RARIMAResult)
+    rArima %<>% 
+      append(RARIMAResult)
   }
   
   # Create list of summary statistics
