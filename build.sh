@@ -16,7 +16,7 @@ EOF
         docker-compose $1
         ;;
     all)
-        docker build -t pax-gui:latest src/webserver/.
+        docker build -t arima-gui:latest src/webserver/.
         docker build -t rserve:latest src/rserve/.
         cd src/api/
         mvn package
