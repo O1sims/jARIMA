@@ -16,7 +16,8 @@ export class HomeComponent implements OnInit {
     private homeService: HomeService) {};
 
   maxValue:number = 100;
-  dataLength:number = 10;
+  dataLength:number = 50;
+  avgPercentDiff:number;
 
   postBody:object = {
     "forecastPeriod": 1,
@@ -91,6 +92,16 @@ export class HomeComponent implements OnInit {
     };
   };
 
+  rounder(numberArray) {
+    var newArray:number[] = [];
+    for (let i = 0; i < numberArray.length; i++) {
+      newArray.push(
+        Math.round(numberArray[i] * 100) / 100
+      );
+    };
+    return newArray;
+  };
+
   sendToARIMA() {
     // Send to R component
     this.homeService.getARIMAResults(
@@ -99,6 +110,9 @@ export class HomeComponent implements OnInit {
       'r-arima').subscribe(
         rArimaResults => {
           this.rArimaResults = rArimaResults;
+          this.rArimaResults['forecast'] = this.rounder(this.rArimaResults['forecast']);
+          this.rArimaResults['lowerBound'] = this.rounder(this.rArimaResults['lowerBound']);
+          this.rArimaResults['upperBound'] = this.rounder(this.rArimaResults['upperBound']);
           // Send to Java component
           this.homeService.getARIMAResults(
           this.postBody['forecastPeriod'],
@@ -106,7 +120,22 @@ export class HomeComponent implements OnInit {
             'j-arima').subscribe(
               jArimaResults => {
                 this.jArimaResults = jArimaResults;
-              })
+                this.jArimaResults['forecast'] = this.rounder(this.jArimaResults['forecast']);
+                this.jArimaResults['lowerBound'] = this.rounder(this.jArimaResults['lowerBound']);
+                this.jArimaResults['upperBound'] = this.rounder(this.jArimaResults['upperBound']);
+
+                var numer = []; var denom = []; var sum = 0;
+                for (let i = 0; i < this.rArimaResults['forecast'].length; i++) {
+                  numer.push(this.rArimaResults['forecast'][i] - this.jArimaResults['forecast'][i]);
+                };
+                for (let i = 0; i < numer.length; i++) {
+                  denom.push((numer[i] / this.rArimaResults['forecast'][i]) * 100);
+                };
+                for (let i = 0; i < denom.length; i++) {
+                  sum += denom[i];
+                };
+                this.avgPercentDiff = sum / denom.length;
+              });
         });
   };
 }
