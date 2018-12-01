@@ -24,7 +24,7 @@ export class HomeService {
   getARIMAResults(forecastPeriod, timeSeriesData, model) {
     var requestoptions = new RequestOptions({
 			method: RequestMethod.Post,
-			url: this.api + '/' + model + '/',
+			url: this.api + '/api/' + model + '/',
       body: this.constructRequest(
         forecastPeriod,
         timeSeriesData)
