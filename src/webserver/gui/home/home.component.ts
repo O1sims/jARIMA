@@ -17,6 +17,8 @@ export class HomeComponent implements OnInit {
 
   maxValue:number = 100;
   dataLength:number = 50;
+
+  avgDiff:number;
   avgPercentDiff:number;
 
   postBody:object = {
@@ -47,24 +49,19 @@ export class HomeComponent implements OnInit {
   generateChart() {
     var ctx = document.getElementById('TimeSeriesChart');
     var chart = new Chart(ctx, {
-      // The type of chart we want to create
       "type": 'line',
-
-      // The data for our dataset
       "data": {
-      "labels": Array.apply(null, {length: this.dataLength}).map(Number.call, Number),
-      "datasets": [{
+        "labels": Array.apply(null, {length: this.dataLength}).map(Number.call, Number),
+        "datasets": [{
           "label": "Time series data",
           "fill": false,
           "lineTension": 0.1,
           "data": this.postBody['tsdata'],
           "borderColor": "rgb(75, 192, 192)"
         }]
-    },
-
-    // Configuration options go here
-    options: {}
-});
+      },
+      options: {}
+    });
   };
 
   stringify() {
@@ -109,6 +106,7 @@ export class HomeComponent implements OnInit {
       this.postBody['tsdata'],
       'r-arima').subscribe(
         rArimaResults => {
+          // R ARIMA results
           this.rArimaResults = rArimaResults;
           this.rArimaResults['forecast'] = this.rounder(this.rArimaResults['forecast']);
           this.rArimaResults['lowerBound'] = this.rounder(this.rArimaResults['lowerBound']);
@@ -119,22 +117,27 @@ export class HomeComponent implements OnInit {
           this.postBody['tsdata'],
             'j-arima').subscribe(
               jArimaResults => {
+                // Java ARIMA results
                 this.jArimaResults = jArimaResults;
                 this.jArimaResults['forecast'] = this.rounder(this.jArimaResults['forecast']);
                 this.jArimaResults['lowerBound'] = this.rounder(this.jArimaResults['lowerBound']);
                 this.jArimaResults['upperBound'] = this.rounder(this.jArimaResults['upperBound']);
 
-                var numer = []; var denom = []; var sum = 0;
+                var numer = []; var denom = [];
+                var sum = 0; var totalDiff = 0;
+                // Difference
                 for (let i = 0; i < this.rArimaResults['forecast'].length; i++) {
                   numer.push(this.rArimaResults['forecast'][i] - this.jArimaResults['forecast'][i]);
                 };
                 for (let i = 0; i < numer.length; i++) {
                   denom.push((numer[i] / this.rArimaResults['forecast'][i]) * 100);
+                  totalDiff += numer[i];
                 };
                 for (let i = 0; i < denom.length; i++) {
                   sum += denom[i];
                 };
-                this.avgPercentDiff = sum / denom.length;
+                this.avgPercentDiff = Math.round((sum / denom.length) * 100) / 100;
+                this.avgDiff = Math.round((totalDiff / denom.length) * 100) / 100;
               });
         });
   };
