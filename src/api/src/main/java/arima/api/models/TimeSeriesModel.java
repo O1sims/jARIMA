@@ -35,8 +35,8 @@ public class TimeSeriesModel {
 	 *
 	 * @return Time Series data used for the model
 	 */
-	public void setTSData(double[] tsdata) {
-		this.tsData = tsdata;
+	public void setTSData(double[] tsData) {
+		this.tsData = tsData;
 	}
 
 	/**
