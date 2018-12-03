@@ -37,8 +37,8 @@ There are two POST API endpoints are developed for this application: one that ru
 ### Request
 
 Both API endpoints consume the same payload structure consisting of:
-* "forecastPeriod". A positive integer
-* "tsData". An array of doubles (must be > 9 in length)
+* `"forecastPeriod"` A positive integer
+* `"tsData"` An array of doubles (must be > 9 in length)
 Consider an example structure below:
 ```json
 {
@@ -54,9 +54,9 @@ Consider an example structure below:
 Overall, the ARIMA API's will respond with similar outputs.
 
 The R ARIMA endpoint produces:
-* "forecast". An array of doubles relating to the point estimates
-* "lowerBound". An array of doubles relating to 95% lower bound
-* "upperBound". An array of doubles relating to 95% upper bound
+* `"forecast"` An array of doubles relating to the point estimates
+* `"lowerBound"` An array of doubles relating to 95% lower bound
+* `"upperBound"` An array of doubles relating to 95% upper bound
 Consider an example structure below:
 ```json
 {
@@ -73,12 +73,12 @@ Consider an example structure below:
 ```
 
 The Java ARIMA endpoint produces extra data, which relate to the models goodness of fit:
-* "forecast". An array of doubles relating to the point estimates
-* "lowerBound". An array of doubles relating to 95% lower bound
-* "upperBound". An array of doubles relating to 95% upper bound
-* "rmse". Root Mean Square Error
-* "aic". Akaike Information Criterion (asymptotically selects the correct model)
-* "maxNormalizedVariance". Maximum normalized variance
+* `"forecast"` An array of doubles relating to the point estimates
+* `"lowerBound"` An array of doubles relating to 95% lower bound
+* `"upperBound"` An array of doubles relating to 95% upper bound
+* `"rmse"` Root Mean Square Error
+* `"aic"` Akaike Information Criterion (asymptotically selects the correct model)
+* `"maxNormalizedVariance"` Maximum normalized variance
 Consider an example structure below:
 
 ```json
