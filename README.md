@@ -2,11 +2,11 @@
 
 ## Overview
 
-This a Java-based web application that develops a allows a user to run .
+This a web application that develops an auto ARIMA function in Java based on the article by [Hyndman and Khandakar, 2008](https://www.jstatsoft.org/article/view/v027i03/v27i03.pdf) and implementation in [R](https://www.rdocumentation.org/packages/forecast/versions/8.4/topics/auto.arima). 
 
 ## Technology stack
 
-The Java web application uses [Springboot](https://www.djangoproject.com/) as the backend framework, [R]() as the comparable analytics engine with the daemonised [Rserve]() client to process time series data and [Angular](https://angular.io/) as the frontend framework. Documentation of the RESTful API service is handled by [Swagger](https://swagger.io/). Development is done within a [Docker](https://www.docker.com/).
+The Java web application uses [Springboot](https://www.djangoproject.com/) as the backend framework, [R](https://www.r-project.org/) as the comparable analytics engine with the daemonised [Rserve](https://www.rforge.net/Rserve/) client to process time series data and [Angular](https://angular.io/) as the frontend framework. Documentation of the RESTful API service is handled by [Swagger](https://swagger.io/). Development is done within a [Docker](https://www.docker.com/).
 
 ## Building the application
 
@@ -37,8 +37,8 @@ There are two POST API endpoints are developed for this application: one that ru
 ### Request
 
 Both API endpoints consume the same payload structure consisting of:
-[] "forecastPeriod". A positive integer; and
-[] "tsData". An array of doubles
+[] "forecastPeriod". A positive integer
+[] "tsData". An array of doubles (must be > 9 in length)
 Consider an example structure below:
 ```
 {
@@ -53,7 +53,11 @@ Consider an example structure below:
 
 Overall, the ARIMA API's will respond with similar outputs.
 
-The R ARIMA endpoint produces:
+The R ARIMA endpoint produces
+[] "forecast". An array of doubles relating to the point estimates
+[] "lowerBound". An array of doubles relating to 95% lower bound
+[] "upperBound". An array of doubles relating to 95% upper bound
+Consider an example structure below:
 ```
 {
   "forecast": [
@@ -69,6 +73,14 @@ The R ARIMA endpoint produces:
 ```
 
 The Java ARIMA endpoint produces extra data, which relate to the models goodness of fit:
+[] "forecast". An array of doubles relating to the point estimates
+[] "lowerBound". An array of doubles relating to 95% lower bound
+[] "upperBound". An array of doubles relating to 95% upper bound
+[] "rmse". Root Mean Square Error
+[] "aic". Akaike Information Criterion (asymptotically selects the correct model)
+[] "maxNormalizedVariance". Maximum normalized variance
+Consider an example structure below:
+
 ```
 {
   "aic": 0,
@@ -85,3 +97,11 @@ The Java ARIMA endpoint produces extra data, which relate to the models goodness
   ]
 }
 ```
+
+## Accuracy
+
+The `R` script written in `./analysis/R/compareARIMA.R` is used to test the accuracy and time taken for the ARIMA analysis.
+
+In terms of accuracy, the Java and R results converge as the time series data being supplied increases in size.
+
+It is 10 to 100 times faster than the R implementation.
