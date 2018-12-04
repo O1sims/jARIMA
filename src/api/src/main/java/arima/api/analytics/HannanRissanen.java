@@ -1,10 +1,12 @@
-package arima.api.analytics.timeseries.arima;
+package arima.api.analytics;
 
-import arima.api.analytics.matrix.InsightsMatrix;
-import arima.api.analytics.matrix.InsightsVector;
-import arima.api.analytics.timeseries.timeseriesutil.ForecastUtil;
+import arima.api.analytics.Matrix;
+import arima.api.analytics.Vector;
+
+import java.util.Arrays;
+
+import arima.api.analytics.ForecastUtil;
 import arima.api.models.ArimaParameterModel;
-import arima.api.models.BackShift;
 
 /**
  * Hannan-Rissanen algorithm for estimating ARIMA parameters
@@ -39,8 +41,6 @@ public final class HannanRissanen {
 
         // step 1: apply Yule-Walker method and estimate AR(r) model on input data
         final double[] errors = new double[length];
-        final double[] yuleWalkerParams = applyYuleWalkerAndGetInitialErrors(data, r, length,
-            errors);
         for (int j = 0; j < r; ++j) {
             errors[j] = 0;
         }
@@ -51,12 +51,11 @@ public final class HannanRissanen {
 
         double bestRMSE = -1; // initial value
         int remainIteration = maxIteration;
-        InsightsVector bestParams = null;
+        Vector bestParams = null;
         while (--remainIteration >= 0) {
-            final InsightsVector estimatedParams = iterationStep(params, data, errors, matrix, r,
+            final Vector estimatedParams = iterationStep(params, data, errors, matrix, r,
                 length,
                 size);
-            final InsightsVector originalParams = params.getParamsIntoVector();
             params.setParamsFromVector(estimatedParams);
 
             // forecast for validation data and compute RMSE
@@ -76,32 +75,7 @@ public final class HannanRissanen {
         params.setParamsFromVector(bestParams);
     }
 
-    private static double[] applyYuleWalkerAndGetInitialErrors(final double[] data, final int r,
-        final int length, final double[] errors) {
-        final double[] yuleWalker = YuleWalker.fit(data, r);
-        final BackShift bsYuleWalker = new BackShift(r, true);
-        bsYuleWalker.initializeParams(false);
-        // return array from YuleWalker is an array of size r whose
-        // 0-th index element is lag 1 coefficient etc
-        // hence shifting lag index by one and copy over to BackShift operator
-        for (int j = 0; j < r; ++j) {
-            bsYuleWalker.setParam(j + 1, yuleWalker[j]);
-        }
-        int m = 0;
-        // populate error array
-        while (m < r) {
-            errors[m++] = 0;
-        } // initial r-elements are set to zero
-        while (m < length) {
-            // from then on, initial estimate of error terms are
-            // Z_t = X_t - \phi_1 X_{t-1} - \cdots - \phi_r X_{t-r}
-            errors[m] = data[m] - bsYuleWalker.getLinearCombinationFrom(data, m);
-            ++m;
-        }
-        return yuleWalker;
-    }
-
-    private static InsightsVector iterationStep(
+    private static Vector iterationStep(
         final ArimaParameterModel params,
         final double[] data, final double[] errors,
         final double[][] matrix, final int r, final int length, final int size) {
@@ -121,19 +95,46 @@ public final class HannanRissanen {
         }
 
         // instantiate matrix to perform least squares algorithm
-        final InsightsMatrix zt = new InsightsMatrix(matrix, false);
+        final Matrix zt = new Matrix(matrix, false);
 
         // instantiate target vector
         final double[] vector = new double[size];
         System.arraycopy(data, r, vector, 0, size);
-        final InsightsVector x = new InsightsVector(vector, false);
+        final Vector x = new Vector(vector, false);
 
         // obtain least squares solution
-        final InsightsVector ztx = zt.timesVector(x);
-        final InsightsMatrix ztz = zt.computeAAT();
-        final InsightsVector estimatedVector = ztz
+        final Vector ztx = zt.timesVector(x);
+        final Matrix ztz = zt.computeAAT();
+        final Vector estimatedVector = ztz
             .solveSPDIntoVector(ztx, ForecastUtil.maxConditionNumber);
 
         return estimatedVector;
+    }
+    
+    public static double[] fit(final double[] data, final int p) {
+
+        int length = data.length;
+        if (length == 0 || p < 1) {
+            throw new RuntimeException(
+                "fitYuleWalker - Invalid Parameters" + "length=" + length + ", p = " + p);
+        }
+
+        double[] r = new double[p + 1];
+        for (double aData : data) {
+            r[0] += Math.pow(aData, 2);
+        }
+        r[0] /= length;
+
+        for (int j = 1; j < p + 1; j++) {
+            for (int i = 0; i < length - j; i++) {
+                r[j] += data[i] * data[i + j];
+            }
+            r[j] /= (length);
+        }
+
+        final Matrix toeplitz = ForecastUtil.initToeplitz(Arrays.copyOfRange(r, 0, p));
+        final Vector rVector = new Vector(Arrays.copyOfRange(r, 1, p + 1), false);
+
+        return toeplitz.solveSPDIntoVector(rVector, ForecastUtil.maxConditionNumber).deepCopy();
     }
 }

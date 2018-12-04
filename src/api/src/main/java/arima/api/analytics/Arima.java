@@ -1,26 +1,13 @@
-package arima.api.analytics.timeseries.arima;
+package arima.api.analytics;
 
-import arima.api.analytics.timeseries.timeseriesutil.ForecastUtil;
 import arima.api.models.ArimaModel;
 import arima.api.models.ArimaParameterModel;
 import arima.api.models.ForecastResultModel;
 
-/**
- * ARIMA implementation
- */
 public final class Arima {
 
-    private Arima() {
-    } // pure static class
+    private Arima() {} 
 
-    /**
-     * Raw-level ARIMA forecasting function.
-     *
-     * @param data UNMODIFIED, list of double numbers representing time-series with constant time-gap
-     * @param forecastSize integer representing how many data points AFTER the data series to be
-     *        forecasted
-     * @return a ForecastResult object, which contains the forecasted values and/or error message(s)
-     */
     public static ForecastResultModel forecast_arima(final double[] data, final int forecastSize) {
 
         try {

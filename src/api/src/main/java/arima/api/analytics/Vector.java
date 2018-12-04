@@ -1,4 +1,4 @@
-package arima.api.analytics.matrix;
+package arima.api.analytics;
 
 import java.io.Serializable;
 
@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * <p> Vector of double entries </p>
  */
-public class InsightsVector implements Serializable {
+public class Vector implements Serializable {
 
     private static final long serialVersionUID = 43L;
 
@@ -25,7 +25,7 @@ public class InsightsVector implements Serializable {
      * @param m size of the vector
      * @param value initial value for all entries
      */
-    public InsightsVector(int m, double value) {
+    public Vector(int m, double value) {
         if (m <= 0) {
             throw new RuntimeException("[InsightsVector] invalid size");
         } else {
@@ -45,7 +45,7 @@ public class InsightsVector implements Serializable {
      * @param deepCopy if TRUE, allocated new memory space and copy data over
      *                 if FALSE, re-use the given memory space and overwrites on it
      */
-    public InsightsVector(double[] data, boolean deepCopy) {
+    public Vector(double[] data, boolean deepCopy) {
         if (data == null || data.length == 0) {
             throw new RuntimeException("[InsightsVector] invalid data");
         } else {
@@ -141,7 +141,7 @@ public class InsightsVector implements Serializable {
      * @param vector vector of the same size
      * @return dot product of the two vector
      */
-    public double dot(InsightsVector vector) {
+    public double dot(Vector vector) {
         if (!_valid || !vector._valid) {
             throw new RuntimeException("[InsightsVector] invalid Vector");
         } else if (_m != vector.size()) {

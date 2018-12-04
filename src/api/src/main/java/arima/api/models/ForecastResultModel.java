@@ -1,6 +1,6 @@
 package arima.api.models;
 
-import arima.api.analytics.timeseries.arima.ArimaSolver;
+import arima.api.analytics.ArimaSolver;
 
 /**
  * ARIMA Forecast Result

@@ -1,6 +1,4 @@
-package arima.api.analytics.timeseries.timeseriesutil;
-
-import arima.api.analytics.matrix.InsightsMatrix;
+package arima.api.analytics;
 
 /**
  * Time series forecasting Utilities
@@ -21,7 +19,7 @@ public final class ForecastUtil {
      * @param input double array as input data
      * @return a Toeplitz InsightsMatrix
      */
-    public static InsightsMatrix initToeplitz(double[] input) {
+    public static Matrix initToeplitz(double[] input) {
         int length = input.length;
         double toeplitz[][] = new double[length][length];
 
@@ -36,7 +34,7 @@ public final class ForecastUtil {
                 }
             }
         }
-        return new InsightsMatrix(toeplitz, false);
+        return new Matrix(toeplitz, false);
     }
 
     /**

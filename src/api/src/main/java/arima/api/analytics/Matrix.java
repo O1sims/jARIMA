@@ -1,15 +1,8 @@
-package arima.api.analytics.matrix;
+package arima.api.analytics;
 
 import java.io.Serializable;
 
-/**
- * InsightsMatrix
- *
- * <p>
- * A small set of linear algebra methods to be used in ARIMA
- * </p>
- */
-public class InsightsMatrix implements Serializable {
+public class Matrix implements Serializable {
 
     public static final long serialVersionUID = 42L;
 
@@ -37,7 +30,7 @@ public class InsightsMatrix implements Serializable {
      * @param makeDeepCopy if TRUE, allocated new memory space and copy data over
      *                     if FALSE, re-use the given memory space and overwrites on it
      */
-    public InsightsMatrix(double[][] data, boolean makeDeepCopy) {
+    public Matrix(double[][] data, boolean makeDeepCopy) {
         if (_valid = isValid2D(data)) {
             _m = data.length;
             _n = data[0].length;
@@ -168,18 +161,18 @@ public class InsightsMatrix implements Serializable {
      * @param v a InsightVector
      * @return a InsightVector of dimension (n x 1)
      */
-    public InsightsVector timesVector(InsightsVector v) {
+    public Vector timesVector(Vector v) {
         if (!_valid || !v._valid || _n != v._m) {
             throw new RuntimeException("[InsightsMatrix][timesVector] size mismatch");
         }
         double[] data = new double[_m];
         double dotProduc;
         for (int i = 0; i < _m; ++i) {
-            InsightsVector rowVector = new InsightsVector(_data[i], false);
+            Vector rowVector = new Vector(_data[i], false);
             dotProduc = rowVector.dot(v);
             data[i] = dotProduc;
         }
-        return new InsightsVector(data, false);
+        return new Vector(data, false);
     }
 
     // More linear algebra operations
@@ -265,7 +258,7 @@ public class InsightsMatrix implements Serializable {
      * @param maxConditionNumber maximum condition number
      * @return solution vector of SPD
      */
-    public InsightsVector solveSPDIntoVector(InsightsVector b, final double maxConditionNumber) {
+    public Vector solveSPDIntoVector(Vector b, final double maxConditionNumber) {
         if (!_valid || b == null || _n != b._m) {
             // invalid linear system
             throw new RuntimeException(
@@ -302,7 +295,7 @@ public class InsightsMatrix implements Serializable {
             }
             bt[i] = y[i] / _cholD[i] - val;
         }
-        return new InsightsVector(bt, false);
+        return new Vector(bt, false);
     }
 
     /**
@@ -310,7 +303,7 @@ public class InsightsMatrix implements Serializable {
      *
      * @return matrix of size (m x m)
      */
-    public InsightsMatrix computeAAT() {
+    public Matrix computeAAT() {
         if (!_valid) {
             throw new RuntimeException("[InsightsMatrix][computeAAT] invalid matrix");
         }
@@ -326,7 +319,7 @@ public class InsightsMatrix implements Serializable {
                 data[i][j] = temp;
             }
         }
-        return new InsightsMatrix(data, false);
+        return new Matrix(data, false);
     }
     //=====================================================================
     // END of Basic Linear Algebra operations

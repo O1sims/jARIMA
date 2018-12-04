@@ -1,8 +1,8 @@
 package arima.api.controllers;
 
+import arima.api.analytics.Arima;
 import arima.api.models.ForecastResultModel;
 import arima.api.models.TimeSeriesModel;
-import arima.api.analytics.timeseries.arima.Arima;
 
 import javax.validation.Valid;
 

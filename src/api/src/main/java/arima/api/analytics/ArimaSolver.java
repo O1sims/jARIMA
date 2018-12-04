@@ -1,7 +1,5 @@
-package arima.api.analytics.timeseries.arima;
+package arima.api.analytics;
 
-import arima.api.analytics.timeseries.timeseriesutil.ForecastUtil;
-import arima.api.analytics.timeseries.timeseriesutil.Integrator;
 import arima.api.models.ArimaModel;
 import arima.api.models.ArimaParameterModel;
 import arima.api.models.ForecastResultModel;
@@ -10,18 +8,8 @@ public final class ArimaSolver {
 
     private static final int maxIterationForHannanRissanen = 5;
 
-    private ArimaSolver() {
-    } // pure static helper class
+    private ArimaSolver() {}
 
-    /**
-     * Forecast ARMA
-     *
-     * @param params MODIFIED. ARIMA parameters
-     * @param dataStationary UNMODIFIED. the time series AFTER differencing / centering
-     * @param startIndex the index where the forecast starts. startIndex &le; data.length
-     * @param endIndex the index where the forecast stops (exclusive). startIndex  endIndex
-     * @return forecast ARMA data point
-     */
     public static double[] forecastARMA(final ArimaParameterModel params, final double[] dataStationary,
         final int startIndex, final int endIndex) {
 
@@ -56,15 +44,6 @@ public final class ArimaSolver {
         return forecasts;
     }
 
-    /**
-     * Produce forecast result based on input ARIMA parameters and forecast length.
-     *
-     * @param params UNMODIFIED. ARIMA parameters
-     * @param data UNMODIFIED. the original time series before differencing / centering
-     * @param forecastStartIndex the index where the forecast starts. startIndex &le; data.length
-     * @param forecastEndIndex the index where the forecast stops (exclusive). startIndex &lt; endIndex
-     * @return forecast result
-     */
     public static ForecastResultModel forecastARIMA(final ArimaParameterModel params, final double[] data,
         final int forecastStartIndex, final int forecastEndIndex) {
 
@@ -126,15 +105,6 @@ public final class ArimaSolver {
         return new ForecastResultModel(forecast, dataVariance);
     }
 
-    /**
-     * Creates the fitted ARIMA model based on the ARIMA parameters.
-     *
-     * @param params MODIFIED. ARIMA parameters
-     * @param data UNMODIFIED. the original time series before differencing / centering
-     * @param forecastStartIndex the index where the forecast starts. startIndex &le; data.length
-     * @param forecastEndIndex the index where the forecast stops (exclusive). startIndex &lt; endIndex
-     * @return fitted ARIMA model
-     */
     public static ArimaModel estimateARIMA(final ArimaParameterModel params, final double[] data,
         final int forecastStartIndex, final int forecastEndIndex) {
 
@@ -173,15 +143,6 @@ public final class ArimaSolver {
         return new ArimaModel(params, data, forecastStartIndex);
     }
 
-    /**
-     * Differentiate procedures for forecast and estimate ARIMA.
-     *
-     * @param params ARIMA parameters
-     * @param trainingData training data
-     * @param hasSeasonalI has seasonal I or not based on the parameter
-     * @param hasNonSeasonalI has NonseasonalI or not based on the parameter
-     * @return stationary data
-     */
     private static double[] differentiate(ArimaParameterModel params, double[] trainingData,
         boolean hasSeasonalI, boolean hasNonSeasonalI) {
         double[] dataStationary;  // currently un-centered
@@ -203,15 +164,6 @@ public final class ArimaSolver {
         return dataStationary;
     }
 
-    /**
-     * Differentiate procedures for forecast and estimate ARIMA.
-     *
-     * @param params ARIMA parameters
-     * @param dataForecastStationary stationary forecast data
-     * @param hasSeasonalI has seasonal I or not based on the parameter
-     * @param hasNonSeasonalI has NonseasonalI or not based on the parameter
-     * @return merged forecast data
-     */
     private static double[] integrate(ArimaParameterModel params, double[] dataForecastStationary,
         boolean hasSeasonalI, boolean hasNonSeasonalI) {
         double[] forecast_merged;
@@ -234,17 +186,6 @@ public final class ArimaSolver {
         return forecast_merged;
     }
 
-    /**
-     * Computes the Root Mean-Squared Error given a time series (with forecast) and true values
-     *
-     * @param left time series being evaluated
-     * @param right true values
-     * @param startIndex the index which to start evaluation
-     * @param endIndex the index which to end evaluation
-     * @param leftIndexOffset the number of elements from @param startIndex to the index which
-     * evaluation begins
-     * @return Root Mean-Squared Error
-     */
     public static double computeRMSE(final double[] left, final double[] right,
         final int leftIndexOffset,
         final int startIndex, final int endIndex) {
@@ -257,19 +198,7 @@ public final class ArimaSolver {
 
         return Math.sqrt(square_sum / (double) (endIndex - startIndex));
     }
-
-
-    /**
-     * Computes the Akaike Information Criterion given a time series
-     *
-     * @param left time series being evaluated
-     * @param right true values
-     * @param startIndex the index which to start evaluation
-     * @param endIndex the index which to end evaluation
-     * @param leftIndexOffset the number of elements from @param startIndex to the index which
-     * evaluation begins
-     * @return Akaike Information Criterion
-     */
+    
     public static double computeAIC(final double[] left, final double[] right,
         final int leftIndexOffset,
         final int startIndex, final int endIndex) {
@@ -279,19 +208,13 @@ public final class ArimaSolver {
             final double error = left[i + leftIndexOffset] - right[i];
             error_sum += Math.abs(error);
         }
-
-        return (endIndex - startIndex) * Math.log(error_sum) + 2;
+        if (error_sum == 0.0) {
+        	return 0;
+        } else {
+        	return (endIndex - startIndex) * Math.log(error_sum) + 2;
+        }
     }
 
-    /**
-     * Performs validation using Root Mean-Squared Error given a time series (with forecast) and
-     * true values
-     *
-     * @param data UNMODIFIED. time series data being evaluated
-     * @param testDataPercentage percentage of data to be used to evaluate as test set
-     * @param params MODIFIED. parameter of the ARIMA model
-     * @return a Root Mean-Squared Error computed from the forecast and true data
-     */
     public static double computeRMSEValidation(final double[] data,
         final double testDataPercentage, ArimaParameterModel params) {
 
@@ -306,15 +229,6 @@ public final class ArimaSolver {
         return computeRMSE(data, forecast, trainingDataEndIndex, 0, forecast.length);
     }
 
-    /**
-     * Performs validation using Akaike Information Criterion given a time series (with forecast) and
-     * true values
-     *
-     * @param data UNMODIFIED. time series data being evaluated
-     * @param testDataPercentage percentage of data to be used to evaluate as test set
-     * @param params MODIFIED. parameter of the ARIMA model
-     * @return a Akaike Information Criterion computed from the forecast and true data
-     */
     public static double computeAICValidation(final double[] data,
         final double testDataPercentage, ArimaParameterModel params) {
 
@@ -329,14 +243,6 @@ public final class ArimaSolver {
         return computeAIC(data, forecast, trainingDataEndIndex, 0, forecast.length);
     }
 
-    /**
-     * Set Sigma2(RMSE) and Predication Interval for forecast result.
-     *
-     * @param params ARIMA parameters
-     * @param forecastResult MODIFIED. forecast result
-     * @param forecastSize size of forecast
-     * @return max normalized variance
-     */
     public static double setSigma2AndPredicationInterval(final ArimaParameterModel params,
         final ForecastResultModel forecastResult, final int forecastSize) {
 
@@ -348,15 +254,6 @@ public final class ArimaSolver {
                     ForecastUtil.ARMAtoMA(coeffs_AR, coeffs_MA, forecastSize)));
     }
 
-    /**
-     * Input checker
-     *
-     * @param params ARIMA parameter
-     * @param data original data
-     * @param startIndex start index of ARIMA operation
-     * @param endIndex end index of ARIMA operation
-     * @return whether the inputs are valid
-     */
     private static boolean checkARIMADataLength(ArimaParameterModel params, double[] data, int startIndex,
         int endIndex) {
         boolean result = true;

@@ -1,7 +1,7 @@
 package arima.api.models;
 
-import arima.api.analytics.matrix.InsightsVector;
-import arima.api.analytics.timeseries.timeseriesutil.Integrator;
+import arima.api.analytics.Vector;
+import arima.api.analytics.Integrator;
 
 /**
  * Simple wrapper for ARIMA parameters and fitted states
@@ -202,7 +202,7 @@ public final class ArimaParameterModel {
      *
      * @param paramVec a vector of parameters
      */
-    public void setParamsFromVector(final InsightsVector paramVec) {
+    public void setParamsFromVector(final Vector paramVec) {
         int index = 0;
         final int[] offsetsAR = getOffsetsAR();
         final int[] offsetsMA = getOffsetsMA();
@@ -222,9 +222,9 @@ public final class ArimaParameterModel {
      *
      * @return Insight Vector of parameters
      */
-    public InsightsVector getParamsIntoVector() {
+    public Vector getParamsIntoVector() {
         int index = 0;
-        final InsightsVector paramVec = new InsightsVector(_np + _nq, 0.0);
+        final Vector paramVec = new Vector(_np + _nq, 0.0);
         final int[] offsetsAR = getOffsetsAR();
         final int[] offsetsMA = getOffsetsMA();
         for (int pIdx : offsetsAR) {

@@ -1,4 +1,4 @@
-package arima.api.analytics.timeseries.timeseriesutil;
+package arima.api.analytics;
 
 /**
  * Pure Helper Class

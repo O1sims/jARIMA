@@ -4,9 +4,6 @@ public class TimeSeriesModel {
 
 	private double[] tsData;
 	private int forecastPeriod;
-	private ArimaParameterModel params;
-	private double[] data;
-	private int trainDataSize;
 
 	/**
 	 * Constructor for TimeSeriesModel
@@ -15,10 +12,9 @@ public class TimeSeriesModel {
 	 * @param data original data
 	 * @param trainDataSize size of train data
 	 */
-	public TimeSeriesModel(ArimaParameterModel params, double[] data, int trainDataSize) {
-			this.params = params;
-			this.data = data;
-			this.trainDataSize = trainDataSize;
+	public TimeSeriesModel(double[] tsData, int forecastPeriod) {
+			this.forecastPeriod = forecastPeriod;
+			this.tsData = tsData;
 	}
 
 	/**
