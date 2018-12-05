@@ -18,6 +18,7 @@ EOF
     all)
         docker build -t arima-gui:latest src/webserver/.
         docker build -t rserve:latest src/rserve/.
+        docker build -t nginx:latest src/nginx/.
         cd src/api/
         mvn package
         docker build -t arima:latest .
