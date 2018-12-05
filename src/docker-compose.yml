@@ -1,5 +1,16 @@
 version: '2'
 services:
+  nginx:
+    restart: unless-stopped
+    container_name: nginx
+    image: nginx:1.13
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/:/etc/nginx/
+
   arima:
     restart: unless-stopped
     image: arima:latest
@@ -9,6 +20,7 @@ services:
       - "9000:9000"
     depends_on:
       - rserve
+      - nginx
     environment:
       - ARIMA_PORT=9000
       - RSERVE_PORT=6311
@@ -24,7 +36,6 @@ services:
       - "3000:3000"
     depends_on:
       - arima
-      - rserve
 
   rserve:
     restart: unless-stopped
