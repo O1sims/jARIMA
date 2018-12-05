@@ -22,7 +22,11 @@ import javax.validation.constraints.NotNull;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {
+	"http://localhost",
+	"http://localhost:80",
+	"http://localhost:3000"
+})
 @RequestMapping("/r-arima")
 public class RArimaController {
 

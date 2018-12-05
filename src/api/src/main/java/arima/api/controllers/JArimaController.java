@@ -14,7 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {
+	"http://localhost",
+	"http://localhost:80",
+	"http://localhost:3000"
+})
 @RequestMapping("/j-arima")
 public class JArimaController {
 
