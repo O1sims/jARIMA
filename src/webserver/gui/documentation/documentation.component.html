@@ -1,0 +1,113 @@
+<div class="container-fluid">
+  <div class="container" style="padding-top: 50px;">
+    <h3 class="panel-heading">
+      Using the application
+    </h3>
+
+    <p>
+      There are two POST API endpoints are developed for this application: one that runs ARIMA analysis in R (<code>.../api/r-arima/</code>) and one that runs ARIMA analysis in Java (<code>.../api/j-arima/</code>).
+    </p>
+
+    <h4>
+      Request
+    </h4>
+
+    <p>
+      Both API endpoints consume the same payload structure consisting of:
+    </p>
+
+    <ul>
+      <li>
+        <code>"forecastPeriod"</code> A positive integer
+      </li>
+      <li>
+        <code>"tsData"</code> An array of doubles (must be > 9 in length)
+        Consider an example structure below:
+      </li>
+    </ul>
+
+    <pre>
+      <code>{{ '{' }}
+        "forecastPeriod": 2,
+        "tsData": [
+        1,2,3,4,5,6,7,8,9,10,11.12
+        ]
+      {{ '}' }}
+      </code>
+    </pre>
+
+    <h4>
+      Response
+    </h4>
+
+    <p>
+      Overall, the ARIMA API's will respond with similar outputs.
+    </p>
+
+    <p>
+      The R ARIMA endpoint produces:
+    </p>
+    <ul>
+      <li><code>"forecast"</code> An array of doubles relating to the point estimates</li>
+
+      <li><code>"lowerBound"</code> An array of doubles relating to 95% lower bound</li>
+
+      <li><code>"upperBound"</code> An array of doubles relating to 95% upper bound
+        Consider an example structure below:</li>
+    </ul>
+
+      <pre><code>{{ '{' }}
+        "forecast": [
+        13, 14
+        ],
+        "lowerBound": [
+        12.5, 13.5
+        ],
+        "upperBound": [
+        13.5, 14.5
+        ]
+      {{ '}' }}
+    </code></pre>
+
+    <p>The Java ARIMA endpoint produces extra data, which relate to the models goodness of fit:</p>
+
+    <ul>
+      <li><code>"forecast"</code> An array of doubles relating to the point estimates</li>
+
+      <li><code>"lowerBound"</code> An array of doubles relating to 95% lower bound</li>
+
+      <li><code>"upperBound"</code> An array of doubles relating to 95% upper bound</li>
+
+      <li><code>"rmse"</code> Root Mean Square Error</li>
+
+      <li><code>"aic"</code> Akaike Information Criterion (asymptotically selects the correct model)</li>
+
+      <li><code>"maxNormalizedVariance"</code> Maximum normalized variance
+        Consider an example structure below:</li>
+      </ul>
+
+      <pre><code>{{ '{' }}
+        "aic": 0,
+        "forecast": [
+        0
+        ],
+        "lowerBound": [
+        0
+        ],
+        "maxNormalizedVariance": 0,
+        "rmse": 0,
+        "upperBound": [
+        0
+        ]
+      {{ '}' }}
+    </code></pre>
+
+    <h3>Accuracy</h3>
+
+    <p>The <code>R</code> script written in <code>./analysis/R/compareARIMA.R</code> is used to test the accuracy and time taken for the ARIMA analysis.</p>
+
+    <p>In terms of accuracy, the Java and R results converge as the time series data being supplied increases in size.</p>
+
+    <p>It is 10 to 100 times faster than the R implementation.</p>
+  </div>
+</div>
