@@ -9,6 +9,9 @@ src/api/target/*
 .mvn/
 !.mvn/wrapper/maven-wrapper.jar
 
+### API bin ##
+src/api/bin/*
+
 ### STS ###
 .apt_generated
 .classpath
