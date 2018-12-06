@@ -9,6 +9,7 @@ import { NavBarComponent }           from './navbar/navbar.component';
 
 import { HomeComponent }             from './home/home.component';
 import { NotFoundComponent }         from './not-found/not-found.component';
+import { DocumentationComponent }    from './documentation/documentation.component';
 
 import { routing }                   from './app.routing';
 
@@ -22,7 +23,8 @@ import { routing }                   from './app.routing';
       AppComponent,
       HomeComponent,
       NavBarComponent,
-      NotFoundComponent
+      NotFoundComponent,
+      DocumentationComponent
     ],
     bootstrap: [
       AppComponent
