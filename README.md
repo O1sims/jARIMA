@@ -1,19 +1,19 @@
-# ARIMA
+# jARIMA
 
 ## Overview
 
-This a web application that develops an auto ARIMA function in Java based on the article by [Hyndman and Khandakar, 2008](https://www.jstatsoft.org/article/view/v027i03/v27i03.pdf) and implementation in [R](https://www.rdocumentation.org/packages/forecast/versions/8.4/topics/auto.arima).
+This a web application that develops an auto-ARIMA function in Java based on the article by [Hyndman and Khandakar, 2008](https://www.jstatsoft.org/article/view/v027i03/v27i03.pdf) and implementation in [R](https://www.rdocumentation.org/packages/forecast/versions/8.4/topics/auto.arima).
 
 ## Technology stack
 
-The Java web application uses [Springboot](https://www.djangoproject.com/) as the backend framework, [R](https://www.r-project.org/) as the comparable analytics engine with the daemonised [Rserve](https://www.rforge.net/Rserve/) client to process time series data and [Angular](https://angular.io/) as the frontend framework. Documentation of the RESTful API service is handled by [Swagger](https://swagger.io/). Development is done within a [Docker](https://www.docker.com/).
+The Java web application uses [Springboot](https://www.djangoproject.com/) as the backend framework, [R](https://www.r-project.org/) as the comparable analytics engine with the daemonised [Rserve](https://www.rforge.net/Rserve/) client to process time series data and [Angular](https://angular.io/) as the frontend framework. Documentation of the RESTful API service is handled by [Swagger](https://swagger.io/). Development is done within a [Docker](https://www.docker.com/). Note the we also use [NGINX](https://www.nginx.com/) as the a load balancing reverse proxy.
 
 ## Building the application
 
 We use Docker in development to make it easy to build, run and share. We have three Dockerfile's: one the builds the Java backend, one that sets up the Rserve client and one that builds the Angular GUI. All components of the application can be built from the `build.sh` file:
 ```
-git clone https://github.com/O1sims/ARIMA.git
-cd ARIMA
+git clone https://github.com/O1sims/jARIMA.git
+cd jARIMA
 bash build.sh all
 ```
 The `build.sh` file has multiple options to choose from.
@@ -26,7 +26,7 @@ bash build.sh up
 ```
 Likewise, the application can be brought down with `bash build.sh down`.
 
-By default, the main ARIMA application is accessible on port `3000`, the API and backend components are on port `9000`, and the Rserve client is run on port `6311`. The `docker-compose.yml` can be altered to allow these services to run on different ports. Swagger API documentation can be found at `localhost:9000/api/swagger-ui.html`.
+By default, the main ARIMA application is accessible on port `80` or `3000`, the API and backend components are on port `9000`, and the Rserve client is run on port `6311`. The `docker-compose.yml` can be altered to allow these services to run on different ports. Swagger API documentation can be found at `localhost:9000/api/swagger-ui.html`.
 
 Environmental variables for the application can be changed in the `docker-compose.yml` file.
 
