@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 
 @Component({
-    selector: 'my-app',
+    selector: 'jarima',
     templateUrl: './app.component.html'
 })
 
