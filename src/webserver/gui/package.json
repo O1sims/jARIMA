@@ -27,7 +27,7 @@
     "@angular/platform-browser-dynamic": "^4.4.7",
     "@angular/router": "^4.4.7",
     "@angular/upgrade": "^4.4.7",
-    "chart.js": "^2.7.3",
+    "chart.js": "^2.9.4",
     "d3": "^3.4.4",
     "ng2-nvd3": "^2.0.0",
     "reflect-metadata": "^0.1.12",
